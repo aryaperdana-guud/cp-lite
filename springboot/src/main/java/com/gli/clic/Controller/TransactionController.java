@@ -1,4 +1,4 @@
-package com.gli.clic.Controller;  // Fixed package name (use lowercase)
+package com.gli.clic.Controller; 
 
 import com.gli.clic.model.Transaction;
 import com.gli.clic.service.TransactionService;
@@ -20,6 +20,13 @@ public class TransactionController {
     @GetMapping
     public List<Transaction> getAllTransactions() { 
         return transactionService.getAllTransactions();
+    }
+    
+    @GetMapping("/filter")
+    public List<Transaction> filterTransactions(
+            @RequestParam(required = false) String txnNode,
+            @RequestParam(required = false) String txnType) {
+        return transactionService.filterTransactions(txnNode, txnType);
     }
 
     @GetMapping("/{id}")

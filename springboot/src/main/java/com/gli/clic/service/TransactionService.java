@@ -24,6 +24,17 @@ public class TransactionService {
         return transactionRepository.findById(id);
     }
 
+    public List<Transaction> filterTransactions(String txnNode, String txnType) {
+        if (txnNode != null && txnType != null) {
+            return transactionRepository.findByTxnNodeAndTxnType(txnNode, txnType);
+        } else if (txnNode != null) {
+            return transactionRepository.findByTxnNode(txnNode);
+        } else if (txnType != null) {
+            return transactionRepository.findByTxnType(txnType);
+        }
+        return transactionRepository.findAll();
+    }
+    
     public Transaction saveTransaction(Transaction transaction) {
         return transactionRepository.save(transaction);
     }

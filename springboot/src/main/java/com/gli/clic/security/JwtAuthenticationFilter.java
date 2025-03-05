@@ -12,11 +12,13 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Collections;
+import java.util.logging.Logger;
 
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtTokenProvider jwtTokenProvider;
+    private final Logger logger = Logger.getLogger(JwtAuthenticationFilter.class.getName());
 
     public JwtAuthenticationFilter(JwtTokenProvider jwtTokenProvider) {
         this.jwtTokenProvider = jwtTokenProvider;
@@ -30,18 +32,22 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             token = token.replace("Bearer ", "");
             if (jwtTokenProvider.validateToken(token)) {
                 String email = jwtTokenProvider.extractEmail(token);
+                logger.info("Authenticated user: " + email);
 
-                // Set authentication in the security context
                 SecurityContextHolder.getContext().setAuthentication(
                         new org.springframework.security.authentication.UsernamePasswordAuthenticationToken(
-                                new User(email, "", Collections.singletonList(new SimpleGrantedAuthority("USER"))),
+                                new User(email, "", Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER"))),
                                 null,
-                                Collections.singletonList(new SimpleGrantedAuthority("USER"))
+                                Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER"))
                         )
                 );
+            } else {
+                logger.warning("Invalid JWT Token detected");
             }
+        } else {
+            logger.warning("Missing or malformed Authorization header");
         }
 
-        filterChain.doFilter(request, response); // Continue filter chain
+        filterChain.doFilter(request, response);
     }
 }
