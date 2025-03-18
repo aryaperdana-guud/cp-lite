@@ -10,13 +10,16 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
+
+import java.util.Arrays;
+
 
 @Configuration
 @EnableWebSecurity
-@EnableWebMvc  // Enable CORS globally
 public class SecurityConfig {
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
@@ -28,38 +31,44 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-            .cors(cors -> cors.configurationSource(request -> new org.springframework.web.cors.CorsConfiguration().applyPermitDefaultValues())) // Correct CORS handling
-            .csrf(csrf -> csrf.disable()) // Disable CSRF protection for stateless APIs
+            .csrf(csrf -> csrf.disable()) // Disable CSRF
+            .cors(cors -> cors.configurationSource(corsConfigurationSource())) // Enable CORS
             .authorizeHttpRequests(auth -> auth
-            	    .requestMatchers("/auth/register", "/auth/login").permitAll()  // Public endpoints
-            	    .requestMatchers(HttpMethod.PUT, "/auth/update/**").authenticated()
-            	    .requestMatchers(HttpMethod.DELETE, "/auth/delete/**").authenticated()
-            	    
-            	    .requestMatchers(HttpMethod.GET, "/transactions/filter").permitAll() // Allow public access to filter
-                    .requestMatchers(HttpMethod.GET, "/transactions/**").permitAll()
-                    .requestMatchers(HttpMethod.POST, "/transactions").permitAll()            	    
-                    
-				/* .requestMatchers("/transactions/**").authenticated() */
+                .requestMatchers(HttpMethod.POST, "/auth/register").permitAll()
+                .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
+                .requestMatchers(HttpMethod.PUT, "/auth/update/**").authenticated() 
+                .requestMatchers(HttpMethod.DELETE, "/auth/delete").authenticated() 
 
-            	    .anyRequest().authenticated()  // Everything else requires authentication
+                .requestMatchers(HttpMethod.GET, "/transactions/filter").permitAll()
+                .requestMatchers(HttpMethod.GET, "/transactions/**").permitAll()
+                .requestMatchers(HttpMethod.POST, "/transactions").permitAll()
+                .requestMatchers(HttpMethod.POST,"/va/**").permitAll() 
+                .requestMatchers(HttpMethod.POST,"/va/create").permitAll() 
+                
+                .anyRequest().authenticated() // All other requests require authentication
             )
-            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-            .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // Stateless session
+            .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class); // Add JWT filter
 
         return http.build();
     }
 
     @Bean
-    public WebMvcConfigurer corsConfigurer() {
-        return new WebMvcConfigurer() {
-            @Override
-            public void addCorsMappings(CorsRegistry registry) {
-                registry.addMapping("/**")
-                        .allowedOrigins("*")  // Allow all origins
-                        .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
-                        .allowedHeaders("*");
-            }
-        };
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration config = new CorsConfiguration();
+        config.setAllowedOrigins(Arrays.asList("*")); // Allow all origins
+        config.setAllowedHeaders(Arrays.asList("Origin", "Content-Type", "Accept", "Authorization"));
+        config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        config.setAllowCredentials(true);
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", config);
+        return source;
+    }
+
+    @Bean
+    public CorsFilter corsFilter() {
+        return new CorsFilter(corsConfigurationSource());
     }
 
     @Bean

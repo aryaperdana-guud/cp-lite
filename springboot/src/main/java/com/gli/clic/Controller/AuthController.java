@@ -8,10 +8,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import jakarta.validation.Valid;
+import java.util.HashMap;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/auth") // Base mapping is /auth
 public class AuthController {
 
     private final UserService userService;
@@ -24,7 +25,7 @@ public class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity<ApiResponse> register(@RequestBody @Valid UserDTO userDTO) {
-        System.out.println("Register request received: " + userDTO.getEmail());
+        System.out.println("Register request received: " + userDTO.getUsrUid() + ", " + userDTO.getUsrAccnId());
         RegisterResponse response = userService.registerUser(userDTO);
         System.out.println("Register response: " + response.getMessage());
         return buildApiResponse(response.getMessage(), response.isSuccess());
@@ -32,27 +33,30 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<ApiResponse> login(@RequestBody @Valid UserDTO userDTO) {
-        return userService.authenticate(userDTO)
-                .map(token -> buildApiResponse("Login successful", true, Map.of("token", token)))
-                .orElse(buildApiResponse("Invalid credentials", false));
-    }
-
-    @PutMapping("/update/email")
-    public ResponseEntity<ApiResponse> updateEmail(@RequestBody @Valid UpdateEmailDTO updateEmailDTO,
-                                                   @RequestHeader("Authorization") String token) {
-        return processAuthenticatedRequest(token, email -> userService.updateEmail(updateEmailDTO.getEmail()));
-    }
-
-    @DeleteMapping("/delete/email")
-    public ResponseEntity<ApiResponse> deleteUser(@RequestBody Map<String, String> requestBody,
-                                                  @RequestHeader("Authorization") String token) {
-        String email = requestBody.get("email");
-        if (email == null || email.isEmpty()) {
-            return buildApiResponse("Email is required", false, HttpStatus.BAD_REQUEST);
+        String usrUid = userService.loginUser(userDTO); 
+        if (usrUid == null) {
+            return buildApiResponse("Invalid credentials", false, HttpStatus.UNAUTHORIZED);
         }
-        return processAuthenticatedRequest(token, authenticatedEmail -> userService.deleteUserByEmail(email));
+        String token = jwtTokenProvider.createToken(usrUid);
+        Map<String, Object> data = new HashMap<>();
+        data.put("token", "Bearer " + token);
+        return buildApiResponse("Login successful", true, data);
     }
 
+    // Update Email (Requires Bearer)
+    @PutMapping("/update/email")
+    public ResponseEntity<ApiResponse> updateEmail(@RequestHeader("Authorization") String token,
+                                                   @RequestBody @Valid UpdateEmailDTO updateEmailDTO) {
+        return processAuthenticatedRequest(token, email -> userService.updateEmail(email, updateEmailDTO));
+    }
+
+    // Delete User (Requires Bearer)
+    @DeleteMapping("/delete")
+    public ResponseEntity<ApiResponse> deleteUser(@RequestHeader("Authorization") String token) {
+        return processAuthenticatedRequest(token, userService::deleteUser);
+    }
+
+    // Token Authentication Helper
     private ResponseEntity<ApiResponse> processAuthenticatedRequest(String token, AuthAction action) {
         if (token == null || !token.startsWith("Bearer ")) {
             return buildApiResponse("Missing or invalid token", false, HttpStatus.UNAUTHORIZED);

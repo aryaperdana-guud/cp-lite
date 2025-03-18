@@ -25,18 +25,26 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     }
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+            throws ServletException, IOException {
+
+        String requestURI = request.getRequestURI();
+
+        if (requestURI.contains("/auth/register") || requestURI.contains("/auth/login")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
         String token = request.getHeader("Authorization");
 
         if (token != null && token.startsWith("Bearer ")) {
             token = token.replace("Bearer ", "");
             if (jwtTokenProvider.validateToken(token)) {
-                String email = jwtTokenProvider.extractEmail(token);
-                logger.info("Authenticated user: " + email);
+                String usrUid = jwtTokenProvider.extractEmail(token);
 
                 SecurityContextHolder.getContext().setAuthentication(
                         new org.springframework.security.authentication.UsernamePasswordAuthenticationToken(
-                                new User(email, "", Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER"))),
+                                new User(usrUid, "", Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER"))),
                                 null,
                                 Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER"))
                         )

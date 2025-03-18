@@ -10,12 +10,12 @@ public class JwtTokenProvider {
     private final String SECRET_KEY = "your_secret_key";
     private final long VALIDITY_IN_MS = 3600000;
 
-    public String createToken(String email) {
+    public String createToken(String usrUid) {
         Date now = new Date();
         Date validity = new Date(now.getTime() + VALIDITY_IN_MS);
 
         return Jwts.builder()
-                .setSubject(email)
+                .setSubject(usrUid)
                 .setIssuedAt(now)
                 .setExpiration(validity)
                 .signWith(SignatureAlgorithm.HS256, SECRET_KEY)
