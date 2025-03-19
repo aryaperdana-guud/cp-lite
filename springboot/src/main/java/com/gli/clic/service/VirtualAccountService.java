@@ -54,7 +54,7 @@ public class VirtualAccountService {
             response.setResponseMessage("No Assignment Data Found");
             return response;
         }
-        AssignmentVA assignmentVA = assignmentVAs.get(0);//take the first result.
+        AssignmentVA assignmentVA = assignmentVAs.get(0);
         System.out.println("Assignment VA: " + assignmentVA);
 
         

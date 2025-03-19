@@ -4,7 +4,7 @@ import java.util.List;
 
 public class VirtualAccountResponse {
 	private VirtualAccountData virtualAccountData;
-    private AdditionalInfo additionalInfo;
+	/* private AdditionalInfo additionalInfo; */
     private String responseCode;
     private String responseMessage;
 	
@@ -16,13 +16,12 @@ public class VirtualAccountResponse {
 		this.virtualAccountData = virtualAccountData;
 	}
 
-	public AdditionalInfo getAdditionalInfo() {
-		return additionalInfo;
-	}
-
-	public void setAdditionalInfo(AdditionalInfo additionalInfo) {
-		this.additionalInfo = additionalInfo;
-	}
+	/*
+	 * public AdditionalInfo getAdditionalInfo() { return additionalInfo; }
+	 * 
+	 * public void setAdditionalInfo(AdditionalInfo additionalInfo) {
+	 * this.additionalInfo = additionalInfo; }
+	 */
 
 	public String getResponseCode() {
 		return responseCode;
@@ -42,19 +41,18 @@ public class VirtualAccountResponse {
 
 	public static class VirtualAccountData {
 		private String partnerServiceId;
-        private String customerNo;
-        private String virtualAccountNo;
-        private String virtualAccountName;
-        private String virtualAccountEmail;
-        private String virtualAccountPhone;
-        private String inquiryRequestId;
-        private TotalAmount totalAmount;
-        private List<BillDetails> billDetails;
-        private String virtualAccountTrxType;
-        private FeeAmount feeAmount;
-    	
-    	
-        public String getPartnerServiceId() {
+	     private String customerNo;
+	     private String virtualAccountNo;
+	     private String virtualAccountName;
+	     private String virtualAccountEmail;
+	     private String virtualAccountPhone;
+	     private String inquiryRequestId;
+	     private TotalAmount totalAmount;
+	     private String virtualAccountTrxType;
+	     private FeeAmount feeAmount;    	
+		
+		
+		 public String getPartnerServiceId() {
 			return partnerServiceId;
 		}
 		public void setPartnerServiceId(String partnerServiceId) {
@@ -102,12 +100,6 @@ public class VirtualAccountResponse {
 		public void setTotalAmount(TotalAmount totalAmount) {
 			this.totalAmount = totalAmount;
 		}
-		public List<BillDetails> getBillDetails() {
-			return billDetails;
-		}
-		public void setBillDetails(List<BillDetails> billDetails) {
-			this.billDetails = billDetails;
-		}
 		public String getVirtualAccountTrxType() {
 			return virtualAccountTrxType;
 		}
@@ -119,7 +111,7 @@ public class VirtualAccountResponse {
 		}
 		public void setFeeAmount(FeeAmount feeAmount) {
 			this.feeAmount = feeAmount;
-		}
+		}    	
     }
 
     public static class TotalAmount {
@@ -144,7 +136,6 @@ public class VirtualAccountResponse {
         private String billNo;
         private String billName;
         private String billShortName;
-//        private BillDescription billDescription;
         private TotalAmount billAmount;
 
     	
@@ -171,15 +162,7 @@ public class VirtualAccountResponse {
 		}
 		public void setBillShortName(String billShortName) {
 			this.billShortName = billShortName;
-		}
-//
-//		public BillDescription getBillDescription() {
-//			return billDescription;
-//		}
-//		public void setBillDescription(BillDescription billDescription) {
-//			this.billDescription = billDescription;
-//		}
-		
+		}		
 		public TotalAmount getBillAmount() {
 			return billAmount;
 		}
@@ -226,16 +209,13 @@ public class VirtualAccountResponse {
 		}
     }
 
-    public static class AdditionalInfo {
-		private String billType;
-
-    	public String getBillType() {
-			return billType;
-		}
-
-		public void setBillType(String billType) {
-			this.billType = billType;
-		}
-
-    }
+	/*
+	 * public static class AdditionalInfo { private String billType;
+	 * 
+	 * public String getBillType() { return billType; }
+	 * 
+	 * public void setBillType(String billType) { this.billType = billType; }
+	 * 
+	 * }
+	 */
 }
