@@ -10,9 +10,10 @@ import org.springframework.web.bind.annotation.*;
 import jakarta.validation.Valid;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 @RestController
-@RequestMapping("/auth") // Base mapping is /auth
+@RequestMapping("/auth")
 public class AuthController {
 
     private final UserService userService;
@@ -33,30 +34,29 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<ApiResponse> login(@RequestBody @Valid UserDTO userDTO) {
-        String usrUid = userService.loginUser(userDTO); 
+        String usrUid = userService.loginUser(userDTO);
         if (usrUid == null) {
             return buildApiResponse("Invalid credentials", false, HttpStatus.UNAUTHORIZED);
         }
         String token = jwtTokenProvider.createToken(usrUid);
         Map<String, Object> data = new HashMap<>();
         data.put("token", "Bearer " + token);
+        String inquiryRequestId = UUID.randomUUID().toString();
+        data.put("inquiryRequestId", inquiryRequestId);
         return buildApiResponse("Login successful", true, data);
     }
 
-    // Update Email (Requires Bearer)
     @PutMapping("/update/email")
     public ResponseEntity<ApiResponse> updateEmail(@RequestHeader("Authorization") String token,
-                                                   @RequestBody @Valid UpdateEmailDTO updateEmailDTO) {
+                                                    @RequestBody @Valid UpdateEmailDTO updateEmailDTO) {
         return processAuthenticatedRequest(token, email -> userService.updateEmail(email, updateEmailDTO));
     }
 
-    // Delete User (Requires Bearer)
     @DeleteMapping("/delete")
     public ResponseEntity<ApiResponse> deleteUser(@RequestHeader("Authorization") String token) {
         return processAuthenticatedRequest(token, userService::deleteUser);
     }
 
-    // Token Authentication Helper
     private ResponseEntity<ApiResponse> processAuthenticatedRequest(String token, AuthAction action) {
         if (token == null || !token.startsWith("Bearer ")) {
             return buildApiResponse("Missing or invalid token", false, HttpStatus.UNAUTHORIZED);

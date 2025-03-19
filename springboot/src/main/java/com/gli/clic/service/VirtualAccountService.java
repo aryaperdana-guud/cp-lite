@@ -7,11 +7,10 @@ import com.gli.clic.model.CreationVA;
 import com.gli.clic.repository.AssignmentVARepository;
 import com.gli.clic.repository.CoreAccnRepository;
 import com.gli.clic.repository.CreationVARepository;
-
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class VirtualAccountService {
@@ -25,7 +24,7 @@ public class VirtualAccountService {
     @Autowired
     private AssignmentVARepository assignmentVARepository;
 
-    public VirtualAccountResponse createVirtualAccount(String customerNo, String partnerServiceId, String virtualAccountNo) {
+    public VirtualAccountResponse createVirtualAccount(String customerNo, String partnerServiceId, String virtualAccountNo, String inquiryRequestId) {
         VirtualAccountResponse response = new VirtualAccountResponse();
 
         System.out.println("MASUK 1");
@@ -57,7 +56,6 @@ public class VirtualAccountService {
         AssignmentVA assignmentVA = assignmentVAs.get(0);
         System.out.println("Assignment VA: " + assignmentVA);
 
-        
         System.out.println("MASUK 4");
         VirtualAccountResponse.VirtualAccountData virtualAccountData = new VirtualAccountResponse.VirtualAccountData();
         virtualAccountData.setPartnerServiceId(partnerServiceId);
@@ -79,6 +77,7 @@ public class VirtualAccountService {
         virtualAccountData.setFeeAmount(feeAmount);
 
         virtualAccountData.setVirtualAccountTrxType("1");
+        virtualAccountData.setInquiryRequestId(inquiryRequestId);
 
         response.setVirtualAccountData(virtualAccountData);
         response.setResponseCode("2002400");
