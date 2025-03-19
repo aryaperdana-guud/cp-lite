@@ -4,7 +4,6 @@ import java.util.List;
 
 public class VirtualAccountResponse {
 	private VirtualAccountData virtualAccountData;
-	/* private AdditionalInfo additionalInfo; */
     private String responseCode;
     private String responseMessage;
 	
@@ -15,13 +14,6 @@ public class VirtualAccountResponse {
 	public void setVirtualAccountData(VirtualAccountData virtualAccountData) {
 		this.virtualAccountData = virtualAccountData;
 	}
-
-	/*
-	 * public AdditionalInfo getAdditionalInfo() { return additionalInfo; }
-	 * 
-	 * public void setAdditionalInfo(AdditionalInfo additionalInfo) {
-	 * this.additionalInfo = additionalInfo; }
-	 */
 
 	public String getResponseCode() {
 		return responseCode;
@@ -171,24 +163,6 @@ public class VirtualAccountResponse {
 		}
     }
 
-//    public static class BillDescription {
-//		private String english;
-//        private String indonesia;
-//
-//        
-//        public String getEnglish() {
-//			return english;
-//		}
-//		public void setEnglish(String english) {
-//			this.english = english;
-//		}
-//		public String getIndonesia() {
-//			return indonesia;
-//		}
-//		public void setIndonesia(String indonesia) {
-//			this.indonesia = indonesia;
-//		}
-//    }
 
     public static class FeeAmount {
 		private Long value;
@@ -208,14 +182,4 @@ public class VirtualAccountResponse {
 			this.currency = currency;
 		}
     }
-
-	/*
-	 * public static class AdditionalInfo { private String billType;
-	 * 
-	 * public String getBillType() { return billType; }
-	 * 
-	 * public void setBillType(String billType) { this.billType = billType; }
-	 * 
-	 * }
-	 */
 }

@@ -70,12 +70,15 @@ public class VirtualAccountService {
         VirtualAccountResponse.TotalAmount totalAmount = new VirtualAccountResponse.TotalAmount();
         totalAmount.setValue(assignmentVA.getAsgnVirtualAmount());
         totalAmount.setCurrency("IDR");
+
         virtualAccountData.setTotalAmount(totalAmount);
 
         VirtualAccountResponse.FeeAmount feeAmount = new VirtualAccountResponse.FeeAmount();
         feeAmount.setValue(assignmentVA.getAsgnVirtualAmount());
         feeAmount.setCurrency("IDR");
         virtualAccountData.setFeeAmount(feeAmount);
+
+        virtualAccountData.setVirtualAccountTrxType("1");
 
         response.setVirtualAccountData(virtualAccountData);
         response.setResponseCode("2002400");
