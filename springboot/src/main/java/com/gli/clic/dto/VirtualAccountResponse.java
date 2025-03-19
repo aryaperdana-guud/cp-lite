@@ -40,7 +40,7 @@ public class VirtualAccountResponse {
 		this.responseMessage = responseMessage;
 	}
 
-    public static class VirtualAccountData {
+	public static class VirtualAccountData {
 		private String partnerServiceId;
         private String customerNo;
         private String virtualAccountNo;
@@ -123,12 +123,12 @@ public class VirtualAccountResponse {
     }
 
     public static class TotalAmount {
-		private String value;
+		private Long value;
         private String currency;
-        public String getValue() {
+        public Long getValue() {
 			return value;
 		}
-		public void setValue(String value) {
+		public void setValue(Long value) {
 			this.value = value;
 		}
 		public String getCurrency() {
@@ -144,7 +144,7 @@ public class VirtualAccountResponse {
         private String billNo;
         private String billName;
         private String billShortName;
-        private BillDescription billDescription;
+//        private BillDescription billDescription;
         private TotalAmount billAmount;
 
     	
@@ -172,12 +172,14 @@ public class VirtualAccountResponse {
 		public void setBillShortName(String billShortName) {
 			this.billShortName = billShortName;
 		}
-		public BillDescription getBillDescription() {
-			return billDescription;
-		}
-		public void setBillDescription(BillDescription billDescription) {
-			this.billDescription = billDescription;
-		}
+//
+//		public BillDescription getBillDescription() {
+//			return billDescription;
+//		}
+//		public void setBillDescription(BillDescription billDescription) {
+//			this.billDescription = billDescription;
+//		}
+		
 		public TotalAmount getBillAmount() {
 			return billAmount;
 		}
@@ -186,34 +188,34 @@ public class VirtualAccountResponse {
 		}
     }
 
-    public static class BillDescription {
-		private String english;
-        private String indonesia;
-
-        
-        public String getEnglish() {
-			return english;
-		}
-		public void setEnglish(String english) {
-			this.english = english;
-		}
-		public String getIndonesia() {
-			return indonesia;
-		}
-		public void setIndonesia(String indonesia) {
-			this.indonesia = indonesia;
-		}
-    }
+//    public static class BillDescription {
+//		private String english;
+//        private String indonesia;
+//
+//        
+//        public String getEnglish() {
+//			return english;
+//		}
+//		public void setEnglish(String english) {
+//			this.english = english;
+//		}
+//		public String getIndonesia() {
+//			return indonesia;
+//		}
+//		public void setIndonesia(String indonesia) {
+//			this.indonesia = indonesia;
+//		}
+//    }
 
     public static class FeeAmount {
-		private String value;
+		private Long value;
         private String currency;
 
         
-        public String getValue() {
+        public Long getValue() {
 			return value;
 		}
-		public void setValue(String value) {
+		public void setValue(Long value) {
 			this.value = value;
 		}
 		public String getCurrency() {

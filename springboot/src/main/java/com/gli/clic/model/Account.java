@@ -59,10 +59,10 @@ public class Account {
     private String accnCtyCode;
 
     @Column(name = "ACCN_TEL")
-    private Long accnTel;
+    private String accnTel;
 
     @Column(name = "ACCN_FAX")
-    private Long accnFax;
+    private String accnFax;
 
     @Column(name = "ACCN_EMAIL")
     private String accnEmail;
@@ -259,19 +259,19 @@ public class Account {
 		this.accnCtyCode = accnCtyCode;
 	}
 
-	public Long getAccnTel() {
+	public String getAccnTel() {
 		return accnTel;
 	}
 
-	public void setAccnTel(Long accnTel) {
+	public void setAccnTel(String accnTel) {
 		this.accnTel = accnTel;
 	}
 
-	public Long getAccnFax() {
+	public String getAccnFax() {
 		return accnFax;
 	}
 
-	public void setAccnFax(Long accnFax) {
+	public void setAccnFax(String accnFax) {
 		this.accnFax = accnFax;
 	}
 

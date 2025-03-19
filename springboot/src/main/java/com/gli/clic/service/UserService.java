@@ -11,7 +11,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import java.security.MessageDigest;
-import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -82,7 +81,6 @@ public class UserService {
         return ResponseEntity.ok(new ApiResponse("User deleted successfully", true));
     }
 
-    // Helper method to generate MD5 hash
     private String md5(String input) {
         try {
             MessageDigest md = MessageDigest.getInstance("MD5");
